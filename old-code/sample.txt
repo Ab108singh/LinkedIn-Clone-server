@@ -1,0 +1,123 @@
+// npm init -y
+
+// npm i packagename
+// npm uninstall packagename
+
+// npm i -D packagename OR npm i packagename --save-dev
+// npm uninstall -D packagename OR npm uninstall packagename --save-dev
+
+// npm i -g packagename OR npm i --global packagename
+// npm uninstall -g packagename OR npm uninstall --global packagename
+
+// npx packagename args
+
+// npm outdated  => to check any outdated dependencies
+// npm update  => to update all outdated dependencies
+// npm update packagename  => to update a outdated dependency
+
+// versioning -> major version, minor version, patch version -> 4 . 17 . 1
+
+// ^ -> 4.18.3, 5.0.0
+// ~
+// * ->
+
+// const http = require("http");
+// const fs = require("fs");
+
+// const server = http.createServer();
+
+// const html = fs.readFileSync("./index.html", "utf8");
+// const css = fs.readFileSync("./style.css", "utf8");
+
+// server.on("request", function (req, res) {
+//     if (req.url === "/") {
+//         res.write(html);
+//         res.end();
+//     } else if (req.url === "/products" && req.method === "GET") {
+//         res.write("All Products page");
+//         res.end();
+//     } else if (req.url === "/products" && req.method === "POST") {
+//         //
+//         let productData = "";
+//         req.on("data", (data) => {
+//             productData += data.toString();
+//         });
+
+//         req.on("end", () => {
+//             productData = JSON.parse(productData);
+
+//             // Database
+
+//             res.write(JSON.stringify(productData));
+//             res.end();
+//         });
+
+//         req.on("error", (err) => {
+//             res.write(err.message);
+//             res.end();
+//         });
+
+//         let data = req.body()
+
+//     } else if (req.url === "/products" && req.method === "PUT") {
+//         res.write("All Products page");
+//         res.end();
+//     } else if (req.url === "/products" && req.method === "DELETE") {
+//         res.write("All Products page");
+//         res.end();
+//     } else if (req.url === "/style.css") {
+//         res.write(css);
+//         res.end();
+//     } else if (req.url === "/about") {
+//         res.write("About page of server");
+//         res.end();
+//     } else {
+//         res.end("Page not Found");
+//     }
+// });
+
+// server.listen(8000, () => {
+//     console.log("Server listening on http://localhost:8000");
+// });
+
+// Server Side App
+// MVC -> Model View Controller
+
+// download
+// stream
+
+// stream -> continuous flow of data
+// req -> readable stream
+// res -> writable stream
+
+// const http = require("http");
+// const fs = require("fs");
+
+// const server = http.createServer();
+
+// const html = fs.readFileSync("./index.html", "utf8");
+
+// server.on("request", function (request, response) {
+//     if (request.url === "/") {
+//         response.end(html);
+//         return;
+//     } else if (request.url === "/about") {
+//         response.end("About");
+//         return;
+//     }
+
+//     response.end("Page not found!");
+// });
+
+// server.listen(5000, () => {
+//     console.log("Listening on http://localhost:5000");
+// });
+
+// // server.on("listening", () => {
+// //     console.log("Listening on http://localhost:5000");
+// // });
+
+// // server.on("error", (err) => {
+// //     console.log(err);
+// //     process.exit(1);
+// // });

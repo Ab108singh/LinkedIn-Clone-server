@@ -1,3 +1,5 @@
+const multer = require("multer");
+
 module.exports = (err, req, res, next) => {
     // err name
     // err message
@@ -5,6 +7,10 @@ module.exports = (err, req, res, next) => {
     // err status code
     // success status - false
 
+    // if (err instanceof multer.MulterError) {
+    //     console.log(err.name);
+    //     console.log(err.message);
+    // }
     // console.log(err.statusCode);
     res.status(err.statusCode || 500).json({
         success: err.success,

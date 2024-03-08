@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 const apiResponse = require("../helpers/ApiRespone");
+const Post = require("../models/post.models");
+const asyncHandler = require("../helpers/asyncHandler");
 
 const getAllPosts = (req, res, next) => {
     try {
@@ -9,16 +11,21 @@ const getAllPosts = (req, res, next) => {
         next(new ApiError(error.message, 500));
     }
 };
-const createNewPost = async (req, res, next) => {
-    try {
-        const user = req.user;
-        // Post creating logic ahead
+const createNewPost = asyncHandler(async (req, res, next) => {
+    let data = req.body;
+    console.log(req.files);
 
-        return apiResponse(res, "Post Created Successfully", 201);
-    } catch (error) {
-        next(new ApiError(error.message, 500));
-    }
-};
+    const filenames = req.files.map((file) => file.filename);
+    console.log(filenames);
+
+    // const newpost = await new Post({
+    //     content: data.content || "",
+    //     attachments: filenames,
+    //     userid: req.user._id,
+    // }).save();
+
+    return apiResponse(res, "Post Created Successfully", 201, {});
+});
 
 const updatePost = (req, res, next) => {
     try {

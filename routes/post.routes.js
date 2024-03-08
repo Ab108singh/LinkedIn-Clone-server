@@ -5,6 +5,7 @@ const {
     updatePost,
 } = require("../controllers/post.controller");
 const authMiddleware = require("../middlewares/authmiddleware");
+const upload = require("../middlewares/upload");
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.get("/", getAllPosts);
  * @method POST
  * @param http://localhost:8000/api/v1/posts
  */
-router.post("/", authMiddleware, createNewPost);
+router.post("/", authMiddleware, upload.array("attachments", 3), createNewPost);
 
 /**
  * @private

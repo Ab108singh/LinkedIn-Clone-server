@@ -9,8 +9,8 @@ const postSchema = new mongoose.Schema(
         },
         attachments: [
             {
-                type: String,
-                required: true,
+                secure_url: String,
+                public_id: String,
             },
         ],
         userid: {

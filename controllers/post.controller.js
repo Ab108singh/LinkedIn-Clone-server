@@ -3,6 +3,7 @@ const User = require("../models/user.model");
 const apiResponse = require("../helpers/ApiRespone");
 const Post = require("../models/post.models");
 const asyncHandler = require("../helpers/asyncHandler");
+const { uploadToCloudinary } = require("../helpers/cloudinary-image");
 
 const getAllPosts = (req, res, next) => {
     try {
@@ -13,16 +14,28 @@ const getAllPosts = (req, res, next) => {
 };
 const createNewPost = asyncHandler(async (req, res, next) => {
     let data = req.body;
-    console.log(req.files);
 
-    const filenames = req.files.map((file) => file.filename);
-    console.log(filenames);
+    if (req.files.length > 3) {
+        return next(new Error("Only 3 files are allowed!"));
+    }
 
-    // const newpost = await new Post({
-    //     content: data.content || "",
-    //     attachments: filenames,
-    //     userid: req.user._id,
-    // }).save();
+    let filePaths = req.files.map((file) => file.path);
+
+    let postPromises = filePaths.map((filepath) => {
+        return uploadToCloudinary(filepath, "posts");
+    });
+
+    let results = await Promise.all(postPromises);
+    console.log(results);
+
+    // let result = await uploadToCloudinary(req.file.path, "posts");
+    // console.log(result);
+
+    const newpost = await new Post({
+        content: data.content || "",
+        attachments: results,
+        userid: req.user._id,
+    }).save();
 
     return apiResponse(res, "Post Created Successfully", 201, {});
 });

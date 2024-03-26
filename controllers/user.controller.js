@@ -6,6 +6,8 @@ const ApiError = require("../helpers/ApiError");
 const apiResponse = require("../helpers/ApiRespone");
 const asyncHandler = require("../helpers/asyncHandler");
 
+
+
 const updateUser = asyncHandler(async (req, res, next) => {
 
 
@@ -14,9 +16,19 @@ const updateUser = asyncHandler(async (req, res, next) => {
     return apiResponse(res, "user updated successfully", 200);
 });
 
+
+const findUsers = async (req, res) => {
+    try {
+        const users = await User.find({});
+        return apiResponse(res, " all users finded", 200,users);
+    } catch (error) {
+        return next(new ApiError("Error occurred while fetching users", 500));
+    }
+}
+
 const registerUser = asyncHandler(async function (req, res, next) {
     let data = req.body;
-
+   console.log(data);
     let result = validationResult(req);
     if (!result.isEmpty()) {
         let erros = result.array().map((errObj) => errObj.msg);
@@ -24,8 +36,7 @@ const registerUser = asyncHandler(async function (req, res, next) {
     }
 
     let existingUser = await User.findOne({
-        $or: [{ email: data.email.trim() }, { username: data.username.trim() }],
-    });
+         email: data.email.trim() });
 
     if (existingUser) {
         return next(new ApiError("User Already registered", 400));
@@ -97,7 +108,7 @@ const loginUser = asyncHandler(async function (req, res, next) {
         { userid: existingUser._id },
         process.env.JWT_SECRET,
         {
-            expiresIn: "24h",
+            expiresIn: "240h",
         }
     );
 
@@ -112,10 +123,42 @@ const loginUser = asyncHandler(async function (req, res, next) {
         token,
     });
 });
+
+const findAdmin = async (req, res) => {
+    try {
+        let header = req.headers["authorization"];
+
+        if (!header) {
+            return next(new ApiError("No Auth Header provided!", 401));
+        }
+
+        let token = header.split(" ")[1];
+        // return res.send(token);
+
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET); // Verify token with the actual secret key
+
+        const userId = decodedToken.userid; // Corrected accessing userid from decoded token
+    //    return res.send(userId);
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
 module.exports = {
     registerUser,
     loginUser,
-    updateUser
+    updateUser,
+    findUsers,
+    findAdmin
 };
 
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NWU2YjIwZTViZjQ5ZGEyN2JhMzEwYzEiLCJpYXQiOjE3MDk3MDA1ODIsImV4cCI6MTcwOTc4Njk4Mn0.9024RhfGogsVJMsKl37_NNCWNkG-dfY5tLX9JlzmHEM

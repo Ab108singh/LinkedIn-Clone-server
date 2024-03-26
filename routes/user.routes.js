@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, loginUser, updateUser } = require("../controllers/user.controller");
+const { registerUser, loginUser, updateUser, findUsers, findAdmin } = require("../controllers/user.controller");
 const {
     registerValidations,
     loginValidations,
@@ -7,9 +7,9 @@ const {
 const authMiddleware = require("../middlewares/authmiddleware");
 
 const router = express.Router();
-
-
-router.post("/register", registerValidations, registerUser);
+router.get('/',findAdmin)
+router.get('/findusers',findUsers )
+router.post("/register", registerValidations, registerUser);   
 router.post("/login", loginValidations, loginUser);
 router.put("/update", authMiddleware, updateUser);
 

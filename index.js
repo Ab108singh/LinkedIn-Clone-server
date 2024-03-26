@@ -14,6 +14,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve("./uploads")));
 
+
+
+
+
+
 app.use(
     "/api/v1/docs",
     swaggerui.serve,
